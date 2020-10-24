@@ -3,34 +3,20 @@ import Axios from "axios";
 import "./App.css";
 import MaterialTable from "material-table";
 
-const API_SERVICE_URL =
-  "https://books.zoho.com/api/v3/contacts?organization_id=649249007";
+const API_SERVICE_URL = "https://myft-backend.herokuapp.com/contacts";
 
-const heders = {
-  "Content-Type": "application/json",
-  Authorization: process.env.AUTH_KEY,
-  "Access-Control-Allow-Origin": "*",
-};
 function App() {
-  const initData = { contacts: [] };
+  const initData = { data: [] };
   const [state, setstate] = useState(initData);
 
   useEffect(() => {
     const getData = () => {
-      const url = window.location.href;
-      if (url !== "http://localhost:3000/") {
-        Axios.get(API_SERVICE_URL, { headers: heders }).then((data) =>
-          setstate({ ...state, contacts: data.data.contacts })
-        );
-        console.log(state);
-      } else {
-        Axios.get("/contacts")
-          .then((data) => {
-            console.log(data.data.contacts);
-            setstate({ ...state, contacts: data.data.contacts });
-          })
-          .catch((err) => console.log(err));
-      }
+      Axios.get(API_SERVICE_URL)
+        .then((data) => {
+          setstate({ ...state, data: data.data.contacts });
+          console.log(data.data.contacts);
+        })
+        .catch((err) => console.log(err));
     };
 
     getData();
@@ -50,7 +36,7 @@ function App() {
           { title: "Created Time", field: "created_time_formatted" },
           { title: "Status", field: "status" },
         ]}
-        data={state.contacts}
+        data={state.data}
         options={{
           sorting: true,
           exportButton: true,
